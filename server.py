@@ -7,4 +7,5 @@ def home():
     # returning string
     # return "Hello, World!, this is a Flask app running in a virtual environment!"
 
+    # returning json
     return {"message": "Hello, World!, this is a Flask app running in a virtual environment!"}
