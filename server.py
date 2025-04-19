@@ -1,4 +1,5 @@
 from flask import Flask
+from flask import make_response
 
 app = Flask(__name__)
 
@@ -14,3 +15,11 @@ def home():
 def no_content():
     # returning no content
     return "No content found", 204
+
+@app.route('/exp')
+def index_explicit():
+    # returning json with make_response() method
+    resp = make_response({"message": "Hello, World!, this is a Flask app"})
+    resp.status_code = 200
+    
+    return resp
