@@ -8,4 +8,9 @@ def home():
     # return "Hello, World!, this is a Flask app running in a virtual environment!"
 
     # returning json
-    return {"message": "Hello, World!, this is a Flask app running in a virtual environment!"}
+    return {"message": "Hello, World!, this is a Flask app"}
+
+@app.route('/no_content')
+def no_content():
+    # returning no content
+    return "No content found", 204
