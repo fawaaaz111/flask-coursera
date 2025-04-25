@@ -137,14 +137,13 @@ def get_count():
         return {"message": "Data is Not Found"}, 500
     
 
-@app.route("/person/<var_name>")
+@app.route("/person/<var_name>", methods=['GET'])
 def find_by_uuid(var_name):
     # Iterate through the 'data' list to search for a person with a matching ID
-    for person in data:
-        # Check if the 'id' field of the person matches the 'var_name' parameter
-        if person["id"] == str(var_name):
-            # Return the person as a JSON response if a match is found
-            return person
+    person = find_person_by_id(var_name)
+    if person:
+        # Return the person as a JSON response if a match is found
+        return person
 
     # Return a JSON response with a message and a 404 Not Found status code if no matching person is found
     return {"message": "Person not found"}, 404
@@ -160,3 +159,54 @@ def delete_person(var_name):
             return {"message": f"Person with ID: {var_name} deleted"}, 200
     # If no person with the given ID is found, return a JSON response with a message and HTTP status code 404 (Not Found)
     return {"message": "Person not found"}, 404
+
+
+@app.route("/person", methods=['POST'])
+def add_by_uuid():
+    try:    
+        # Get the JSON data from the request
+        new_person =  request.get_json()
+        if not new_person:
+            # If no JSON data is provided, return a 422 Unprocessable Entity response
+            return {"message": "No JSON data provided"}, 422
+        
+        # Check if the required fields are present in the JSON data
+        if not all(key in new_person for key in ("id", "first_name", "last_name", "graduation_year", "address", "city", "zip", "country", "avatar")):
+            # If any required field is missing, return a 422 Unprocessable Entity response
+            return {"message": "Missing required fields"}, 422
+
+        if (person_exists:= find_person_by_id(new_person['id'])):
+            # If a person with the same ID already exists, return a 422 Unprocessable Entity response
+            return {"message": f"Person: {person_exists} with ID already exists"}, 422
+        
+        # Add the new person to the data list
+        data.append(new_person)
+
+        # Return a JSON response with a message and HTTP status code 201 (Created)
+        return {"message": f"Person with ID: {new_person['id']} added"}, 201
+    except NameError:
+        # If 'data' is not defined and raises a NameError
+        return {"message": "Data is Not Found"}, 500
+    
+
+
+
+
+def find_person_by_id(person_id):
+    """Find a person in the database by ID.
+
+    Args:
+        person_id (str): The ID of the person to find.
+
+    Returns:
+        dict: The person if found, None otherwise.
+    """
+    try:
+        for person in data:
+            if person["id"] == person_id:
+                return person
+    except NameError:
+        # Handle the case where 'data' is not defined
+        # Return None or raise an exception as needed
+        raise NameError("Data not found")
+    return None
