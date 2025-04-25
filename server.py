@@ -135,3 +135,16 @@ def get_count():
     except NameError:
         # If 'data' is not defined and raises a NameError
         return {"message": "Data is Not Found"}, 500
+    
+
+@app.route("/person/<var_name>")
+def find_by_uuid(var_name):
+    # Iterate through the 'data' list to search for a person with a matching ID
+    for person in data:
+        # Check if the 'id' field of the person matches the 'var_name' parameter
+        if person["id"] == str(var_name):
+            # Return the person as a JSON response if a match is found
+            return person
+
+    # Return a JSON response with a message and a 404 Not Found status code if no matching person is found
+    return {"message": "Person not found"}, 404
