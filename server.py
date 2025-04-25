@@ -125,3 +125,13 @@ def name_search():
 
     # If no match is found, return a JSON response with a message indicating the person was not found and a 404 Not Found status code
     return {"message": "Person not found"}, 404
+
+
+@app.route("/count")
+def get_count():
+    try:
+        # Attempt to return a JSON response with the count of items in 'data'
+        return {"message": f"Data count is {len(data)}"}, 200
+    except NameError:
+        # If 'data' is not defined and raises a NameError
+        return {"message": "Data is Not Found"}, 500
