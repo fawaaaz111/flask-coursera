@@ -189,7 +189,10 @@ def add_by_uuid():
         return {"message": "Data is Not Found"}, 500
     
 
-
+@app.errorhandler(404)
+def api_not_found(error):
+    # Return a JSON response with a message and HTTP status code 404 (Not Found)
+    return {"message": "API not found"}, error.code
 
 
 def find_person_by_id(person_id):
